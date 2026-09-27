@@ -31,3 +31,28 @@ join:
 
 clean:
 	rm -rf prima.cpp
+
+# Demo QM and GBrain against the ring master at $(MASTER):8088.
+#
+#   make demo-gbrain
+#   make demo-qm && make demo-qm-stop
+#   make proxy            (on the master, in front of llama-server :8080)
+
+QUESTION ?= Which machines form the prima.cpp ring and what does each one run?
+
+.PHONY: demo-gbrain demo-qm demo-qm-web demo-qm-stop proxy
+
+demo-gbrain:
+	MASTER=$(MASTER) QUESTION='$(QUESTION)' bash scripts/demo_gbrain.sh
+
+demo-qm:
+	MASTER=$(MASTER) bash scripts/demo_qm.sh
+
+demo-qm-web:
+	MASTER=$(MASTER) bash scripts/demo_qm_web.sh
+
+demo-qm-stop:
+	bash scripts/demo_qm.sh --stop
+
+proxy:
+	python3 scripts/compat_proxy.py --listen 0.0.0.0:8088 --upstream http://127.0.0.1:8080 --alias qwen2.5-7b

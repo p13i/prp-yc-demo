@@ -1,3 +1,6 @@
 prima.cpp/
 *.gguf
 models/
+gbrain/
+qm/
+gbrain-home/
